@@ -1,0 +1,18 @@
+
+## Déploiement sur Netlify
+
+1. Push ce repo sur GitHub
+2. Connecte ton repo à Netlify
+3. Netlify détectera automatiquement la configuration
+
+## Technologies
+
+- React 18 + TypeScript
+- Vite + PWA Plugin
+- Tailwind CSS v4
+- Framer Motion
+- localStorage pour le stockage offline
+
+## License
+
+MIT
