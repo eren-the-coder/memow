@@ -58,7 +58,7 @@ export default function App() {
             className="flex-1 flex flex-col"
           >
             <div className="flex-1">
-              <HomeScreen 
+              <HomeScreen
                 onStartTraining={handleStartTraining}
                 wordCount={words.length}
               />
@@ -127,9 +127,9 @@ export default function App() {
       </AnimatePresence>
 
       {showNav && (
-        <Navigation 
-          currentScreen={currentScreen} 
-          onNavigate={setCurrentScreen} 
+        <Navigation
+          currentScreen={currentScreen}
+          onNavigate={setCurrentScreen}
         />
       )}
     </div>
