@@ -31,7 +31,7 @@ export function TrainingScreen({ words, onClose, onComplete }: TrainingScreenPro
     if (currentIndex + 1 >= reviewWords.length) {
       onComplete();
     } else {
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex((prev: number) => prev + 1);
     }
   };
 
@@ -73,9 +73,9 @@ export function TrainingScreen({ words, onClose, onComplete }: TrainingScreenPro
                 <p className="text-xs text-slate-400 mb-2 uppercase tracking-wider">
                   {currentWord.language === 'english' ? '🇬🇧 Anglais' : '🇫🇷 Français'}
                 </p>
-                
+
                 <h2 className="text-3xl font-bold text-slate-800 mb-4">
-                  {currentWord.word}
+                  {currentWord.term}
                 </h2>
 
                 <AnimatePresence>
@@ -132,16 +132,15 @@ export function TrainingScreen({ words, onClose, onComplete }: TrainingScreenPro
 
       <div className="p-4">
         <div className="flex gap-1">
-          {reviewWords.map((_, idx) => (
+          {reviewWords.map((_: Word, idx: number) => (
             <div
               key={idx}
-              className={`h-1 flex-1 rounded-full transition-colors ${
-                idx < currentIndex
-                  ? 'bg-emerald-500'
-                  : idx === currentIndex
+              className={`h-1 flex-1 rounded-full transition-colors ${idx < currentIndex
+                ? 'bg-emerald-500'
+                : idx === currentIndex
                   ? 'bg-emerald-300'
                   : 'bg-slate-200'
-              }`}
+                }`}
             />
           ))}
         </div>

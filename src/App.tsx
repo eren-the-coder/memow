@@ -108,6 +108,7 @@ export default function App() {
             <WordListScreen
               words={words}
               onUpdate={loadWords}
+              onClose={() => setCurrentScreen('home')}
             />
           </motion.div>
         )}
@@ -120,7 +121,7 @@ export default function App() {
             exit={{ opacity: 0, x: -50 }}
             className="flex-1"
           >
-            <StatsScreen words={words} />
+            <StatsScreen words={words} onClose={() => setCurrentScreen('home')} />
           </motion.div>
         )}
       </AnimatePresence>
