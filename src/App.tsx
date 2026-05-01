@@ -16,7 +16,6 @@ export default function App() {
   const [words, setWords] = useState<Word[]>([]);
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [trainingWords, setTrainingWords] = useState<Word[]>([]);
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>('english');
 
   useEffect(() => {
     loadWords();
@@ -28,7 +27,6 @@ export default function App() {
   };
 
   const handleStartTraining = (language: Language) => {
-    setSelectedLanguage(language);
     const toReview = selectWordsForReview(words, language, 10);
     if (toReview.length > 0) {
       setTrainingWords(toReview);
@@ -109,7 +107,6 @@ export default function App() {
           >
             <WordListScreen
               words={words}
-              onClose={() => setCurrentScreen('home')}
               onUpdate={loadWords}
             />
           </motion.div>
@@ -123,18 +120,15 @@ export default function App() {
             exit={{ opacity: 0, x: -50 }}
             className="flex-1"
           >
-            <StatsScreen
-              words={words}
-              onClose={() => setCurrentScreen('home')}
-            />
+            <StatsScreen words={words} />
           </motion.div>
         )}
       </AnimatePresence>
 
       {showNav && (
-        <Navigation
-          currentScreen={currentScreen as 'home' | 'add' | 'list' | 'stats'}
-          onNavigate={(screen) => setCurrentScreen(screen as Screen)}
+        <Navigation 
+          currentScreen={currentScreen} 
+          onNavigate={setCurrentScreen} 
         />
       )}
     </div>
