@@ -1,68 +1,111 @@
-import { Word } from '../types';
+import { Card, Category } from '../types'
 
-const STORAGE_KEY = 'memow_words';
+const CARDS_KEY = 'memow_cards'
+const CATEGORIES_KEY = 'memow_categories'
+const THEME_KEY = 'memow_theme'
 
-export const storage = {
-  getWords: (): Word[] => {
-    try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      if (!data) return [];
-      const words = JSON.parse(data);
-      return words.map((w: Word) => ({
-        ...w,
-        dateAdded: new Date(w.dateAdded),
-        lastRevised: w.lastRevised ? new Date(w.lastRevised) : undefined
-      }));
-    } catch {
-      return [];
-    }
-  },
+// Cards
+export function getCards(): Card[] {
+  const data = localStorage.getItem(CARDS_KEY)
+  return data ? JSON.parse(data) : []
+}
 
-  saveWords: (words: Word[]): void => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(words));
-  },
-
-  addWord: (word: Omit<Word, 'id' | 'dateAdded' | 'timesSeen' | 'successes' | 'failures'>): Word => {
-    const words = storage.getWords();
-    const newWord: Word = {
-      ...word,
-      id: crypto.randomUUID(),
-      dateAdded: new Date(),
-      timesSeen: 0,
-      successes: 0,
-      failures: 0
-    };
-    storage.saveWords([...words, newWord]);
-    return newWord;
-  },
-
-  updateWord: (id: string, updates: Partial<Word>): void => {
-    const words = storage.getWords();
-    const updated = words.map(w =>
-      w.id === id ? { ...w, ...updates } : w
-    );
-    storage.saveWords(updated);
-  },
-
-  deleteWord: (id: string): void => {
-    const words = storage.getWords();
-    storage.saveWords(words.filter(w => w.id !== id));
-  },
-
-  recordAnswer: (id: string, knew: boolean): Word => {
-    const words = storage.getWords();
-    const wordIndex = words.findIndex(w => w.id === id);
-    if (wordIndex === -1) throw new Error('Word not found');
-    const word = words[wordIndex];
-    const updated: Word = {
-      ...word,
-      timesSeen: word.timesSeen + 1,
-      successes: knew ? word.successes + 1 : word.successes,
-      failures: knew ? word.failures : word.failures + 1,
-      lastRevised: new Date()
-    };
-    words[wordIndex] = updated;
-    storage.saveWords(words);
-    return updated;
+export function saveCard(card: Card): void {
+  const cards = getCards()
+  const existingIndex = cards.findIndex(c => c.id === card.id)
+  if (existingIndex >= 0) {
+    cards[existingIndex] = card
+  } else {
+    cards.push(card)
   }
-};
+  localStorage.setItem(CARDS_KEY, JSON.stringify(cards))
+}
+
+export function saveCards(newCards: Card[]): void {
+  const existingCards = getCards()
+  const existingIds = new Set(existingCards.map(c => c.id))
+  
+  const mergedCards = [...existingCards]
+  for (const card of newCards) {
+    if (!existingIds.has(card.id)) {
+      mergedCards.push(card)
+    }
+  }
+  
+  localStorage.setItem(CARDS_KEY, JSON.stringify(mergedCards))
+}
+
+export function updateCard(card: Card): void {
+  const cards = getCards()
+  const index = cards.findIndex(c => c.id === card.id)
+  if (index >= 0) {
+    cards[index] = card
+    localStorage.setItem(CARDS_KEY, JSON.stringify(cards))
+  }
+}
+
+export function deleteCard(id: string): void {
+  const cards = getCards().filter(c => c.id !== id)
+  localStorage.setItem(CARDS_KEY, JSON.stringify(cards))
+}
+
+// Categories
+export function getCategories(): Category[] {
+  const data = localStorage.getItem(CATEGORIES_KEY)
+  return data ? JSON.parse(data) : []
+}
+
+export function saveCategory(category: Category): void {
+  const categories = getCategories()
+  const existingIndex = categories.findIndex(c => c.id === category.id)
+  if (existingIndex >= 0) {
+    categories[existingIndex] = category
+  } else {
+    categories.push(category)
+  }
+  localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories))
+}
+
+export function updateCategory(id: string, name: string): void {
+  const categories = getCategories()
+  const index = categories.findIndex(c => c.id === id)
+  if (index >= 0) {
+    categories[index].name = name
+    localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories))
+    
+    // Update cards with this category
+    const cards = getCards()
+    const oldName = categories[index].name
+    cards.forEach((card, cardIndex) => {
+      if (card.category === oldName) {
+        cards[cardIndex].category = name
+      }
+    })
+    localStorage.setItem(CARDS_KEY, JSON.stringify(cards))
+  }
+}
+
+export function deleteCategory(id: string): void {
+  const categories = getCategories()
+  const category = categories.find(c => c.id === id)
+  
+  if (category) {
+    // Remove category
+    const filteredCategories = categories.filter(c => c.id !== id)
+    localStorage.setItem(CATEGORIES_KEY, JSON.stringify(filteredCategories))
+    
+    // Delete cards with this category
+    const cards = getCards().filter(c => c.category !== category.name)
+    localStorage.setItem(CARDS_KEY, JSON.stringify(cards))
+  }
+}
+
+// Theme
+export function getTheme(): 'light' | 'dark' {
+  const data = localStorage.getItem(THEME_KEY)
+  return data === 'dark' ? 'dark' : 'light'
+}
+
+export function saveTheme(theme: 'light' | 'dark'): void {
+  localStorage.setItem(THEME_KEY, theme)
+}

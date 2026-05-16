@@ -1,19 +1,17 @@
-export interface Word {
-  id: string;
-  term: string;
-  meaning: string;
-  language: 'english' | 'french';
-  dateAdded: Date;
-  timesSeen: number;
-  successes: number;
-  failures: number;
-  lastRevised?: Date;
+export type Card = {
+  id: string
+  question: string
+  answer: string
+  category?: string
+  createdAt: number
+  updatedAt: number
+  successCount: number
+  failCount: number
+  lastReviewedAt?: number
 }
 
-export interface SessionStats {
-  totalReviews: number;
-  correctAnswers: number;
-  date: Date;
+export type Category = {
+  id: string
+  name: string
+  createdAt: number
 }
-
-export type Language = 'english' | 'french';
