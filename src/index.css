@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Perspective for 3D flip effect */
 .perspective-1000 {
