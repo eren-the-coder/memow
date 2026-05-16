@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title">
+  <title>Memow icon</title>
+  <rect width="120" height="120" rx="30" fill="#0f172a" />
+  <path d="M35 45h50v10H35zM35 60h50v10H35zM35 75h32v10H35z" fill="#10b981" />
+  <circle cx="83" cy="70" r="12" fill="#fff" opacity="0.85" />
+  <path d="M78 70l5 5 10-10" fill="none" stroke="#0f172a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
